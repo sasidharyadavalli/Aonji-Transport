@@ -1,5 +1,6 @@
 package com.example.Aonji.Transport.Entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -123,5 +124,6 @@ public class Agent {
     String state;
     Long pinCode;
     @OneToMany(mappedBy = "agent")
+     @JsonIgnore
     List<Bill>bills;
 }

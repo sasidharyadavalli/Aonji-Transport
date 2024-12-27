@@ -21,7 +21,4 @@ private final BillService billService;
     }
 
 
-    public Bill saveBill2(@RequestBody BillDto billDto){
-       return billService.saveBill2(billDto);
-    }
 }
