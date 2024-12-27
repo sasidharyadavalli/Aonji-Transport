@@ -16,4 +16,8 @@ private final AgentRepo agentRepo;
     public Agent saveAgent(Agent agent){
         return agentRepo.save(agent);
     }
+
+    public Agent findByCityOrTown(String cityOrTown) {
+           return agentRepo.findByCityOrTown(cityOrTown);
+    }
 }

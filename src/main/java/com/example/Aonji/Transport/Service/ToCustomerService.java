@@ -15,4 +15,7 @@ private final ToCustomerRepo toCustomerRepo;
         return toCustomerRepo.save(toCustomer);
     }
 
+    public ToCustomer findByName(String name) {
+       return toCustomerRepo.findByName(name);
+    }
 }

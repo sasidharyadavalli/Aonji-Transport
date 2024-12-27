@@ -5,7 +5,6 @@ import com.example.Aonji.Transport.Entities.Bill;
 import com.example.Aonji.Transport.Entities.FromCustomer;
 import com.example.Aonji.Transport.Entities.ToCustomer;
 import com.example.Aonji.Transport.Repository.BillRepo;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -23,19 +22,34 @@ public class BillService {
     }
 
     public Bill saveBill(Bill bill){
-        Agent agent=bill.getAgent();
-       Agent agent1= agentService.saveAgent(agent);
-       if (agent1==null){
-           throw new RuntimeException("agent not saved");
+        String cityOrTown=bill.getTo_townOrCity();
+        Agent agent=agentService.findByCityOrTown(cityOrTown);
+        if(agent==null){
+            agentService.saveAgent(bill.getAgent());
+        }else {
+            bill.setAgent(agent);
+        }
+
+        String name=bill.getToCustomer().getName();
+        ToCustomer toCustomer=toCustomerService.findByName(name);
+         if(toCustomer==null){
+             toCustomerService.saveToCustomer(bill.getToCustomer());
+         }else {
+             bill.setToCustomer(toCustomer);
+         }
+
+
+        String name2=bill.getFromCustomer().getName();
+        FromCustomer fromCustomer=fromCustomerService.findByName(name2);
+       if(fromCustomer==null){
+           fromCustomerService.saveFromCustomer(bill.getFromCustomer());
+       }else {
+          bill.setFromCustomer(fromCustomer);
        }
 
-        ToCustomer toCustomer=bill.getToCustomer();
-       toCustomerService.saveToCustomer(toCustomer);
-
-        FromCustomer fromCustomer=bill.getFromCustomer();
-        fromCustomerService.saveFromCustomer(fromCustomer);
 
         return billRepo.save(bill);
     }
+
 
 }

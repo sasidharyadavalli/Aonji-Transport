@@ -15,4 +15,8 @@ private final FromCustomerRepo fromCustomerRepo;
     public FromCustomer saveFromCustomer(FromCustomer fromCustomer){
         return fromCustomerRepo.save(fromCustomer);
     }
+
+    public FromCustomer findByName(String name) {
+      return fromCustomerRepo.findByName(name);
+    }
 }
