@@ -1,5 +1,7 @@
 package com.example.Aonji.Transport.Entities;
 
+import com.example.Aonji.Transport.Entities.Numbers.FromMobile;
+import com.example.Aonji.Transport.Entities.Numbers.ToMobile;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -10,18 +12,6 @@ public class Bill {
  public Bill() {
  }
 
- public Bill(Long id, Long lr_no, String to_townOrCity, int no_of_parcels, Date date, String parcel_description, ToCustomer toCustomer, Agent agent, FromCustomer fromCustomer, int cost) {
-  this.id = id;
-  this.lr_no = lr_no;
-  To_townOrCity = to_townOrCity;
-  this.no_of_parcels = no_of_parcels;
-  this.date = date;
-  this.parcel_description = parcel_description;
-  this.toCustomer = toCustomer;
-  this.agent = agent;
-  this.fromCustomer = fromCustomer;
-  this.cost = cost;
- }
 
  @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,20 +23,12 @@ public class Bill {
   return id;
  }
 
- @Override
- public String toString() {
-  return "Bill{" +
-          "id=" + id +
-          ", lr_no=" + lr_no +
-          ", To_townOrCity='" + To_townOrCity + '\'' +
-          ", no_of_parcels=" + no_of_parcels +
-          ", date=" + date +
-          ", parcel_description='" + parcel_description + '\'' +
-          ", toCustomer=" + toCustomer +
-          ", agent=" + agent +
-          ", fromCustomer=" + fromCustomer +
-          ", cost=" + cost +
-          '}';
+ public FromMobile getFromMobile() {
+  return fromMobile;
+ }
+
+ public void setFromMobile(FromMobile fromMobile) {
+  this.fromMobile = fromMobile;
  }
 
  public void setId(Long id) {
@@ -128,7 +110,26 @@ public class Bill {
  @Column(nullable = false)
     String To_townOrCity;
     int no_of_parcels;
-    @Column(nullable = false)
+
+ @Override
+ public String toString() {
+  return "Bill{" +
+          "id=" + id +
+          ", lr_no=" + lr_no +
+          ", To_townOrCity='" + To_townOrCity + '\'' +
+          ", no_of_parcels=" + no_of_parcels +
+          ", date=" + date +
+          ", parcel_description='" + parcel_description + '\'' +
+          ", toCustomer=" + toCustomer +
+          ", agent=" + agent +
+          ", fromCustomer=" + fromCustomer +
+          ", cost=" + cost +
+          ", fromMobile=" + fromMobile +
+          ", toMobile=" + toMobile +
+          '}';
+ }
+
+ @Column(nullable = false)
     Date date;
     String parcel_description;
     @ManyToOne
@@ -142,4 +143,35 @@ public class Bill {
     FromCustomer fromCustomer;
     @Column(nullable = false)
     int cost;
+
+ public ToMobile getToMobile() {
+  return toMobile;
+ }
+
+ public Bill(Long id, Long lr_no, String to_townOrCity, int no_of_parcels, Date date, String parcel_description, ToCustomer toCustomer, Agent agent, FromCustomer fromCustomer, int cost, FromMobile fromMobile, ToMobile toMobile) {
+  this.id = id;
+  this.lr_no = lr_no;
+  To_townOrCity = to_townOrCity;
+  this.no_of_parcels = no_of_parcels;
+  this.date = date;
+  this.parcel_description = parcel_description;
+  this.toCustomer = toCustomer;
+  this.agent = agent;
+  this.fromCustomer = fromCustomer;
+  this.cost = cost;
+  this.fromMobile = fromMobile;
+  this.toMobile = toMobile;
+ }
+
+ public void setToMobile(ToMobile toMobile) {
+  this.toMobile = toMobile;
+ }
+
+ @ManyToOne
+    @JoinColumn(name = "from_mobile_id")
+    FromMobile fromMobile;
+
+    @ManyToOne
+    @JoinColumn(name = "to_mobile_id")
+    ToMobile toMobile;
 }

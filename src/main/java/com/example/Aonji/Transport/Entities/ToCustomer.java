@@ -1,5 +1,6 @@
 package com.example.Aonji.Transport.Entities;
 
+import com.example.Aonji.Transport.Entities.Numbers.ToMobile;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -12,38 +13,12 @@ public class ToCustomer {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
     String name;
-    Long mobile;
     String Street;
 
     public ToCustomer() {
     }
 
-    public ToCustomer(Long id, String name, Long mobile, String street, String landMark, String cityOrTown, String state, Long pinCode, List<Bill> bills) {
-        this.id = id;
-        this.name = name;
-        this.mobile = mobile;
-        Street = street;
-        LandMark = landMark;
-        this.cityOrTown = cityOrTown;
-        this.state = state;
-        this.pinCode = pinCode;
-        this.bills = bills;
-    }
 
-    @Override
-    public String toString() {
-        return "ToCustomer{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", mobile=" + mobile +
-                ", Street='" + Street + '\'' +
-                ", LandMark='" + LandMark + '\'' +
-                ", cityOrTown='" + cityOrTown + '\'' +
-                ", state='" + state + '\'' +
-                ", pinCode=" + pinCode +
-                ", bills=" + bills +
-                '}';
-    }
 
     public Long getId() {
         return id;
@@ -61,13 +36,8 @@ public class ToCustomer {
         this.name = name;
     }
 
-    public Long getMobile() {
-        return mobile;
-    }
 
-    public void setMobile(Long mobile) {
-        this.mobile = mobile;
-    }
+
 
     public String getStreet() {
         return Street;
@@ -125,4 +95,42 @@ public class ToCustomer {
     @JsonIgnore
     List<Bill> bills;
 
+    @Override
+    public String toString() {
+        return "ToCustomer{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", Street='" + Street + '\'' +
+                ", LandMark='" + LandMark + '\'' +
+                ", cityOrTown='" + cityOrTown + '\'' +
+                ", state='" + state + '\'' +
+                ", pinCode=" + pinCode +
+                ", bills=" + bills +
+                ", toMobiles=" + toMobiles +
+                '}';
+    }
+
+    public List<ToMobile> getToMobiles() {
+        return toMobiles;
+    }
+
+    public void setToMobiles(List<ToMobile> toMobiles) {
+        this.toMobiles = toMobiles;
+    }
+
+    public ToCustomer(Long id, String name, String street, String landMark, String cityOrTown, String state, Long pinCode, List<Bill> bills, List<ToMobile> toMobiles) {
+        this.id = id;
+        this.name = name;
+        Street = street;
+        LandMark = landMark;
+        this.cityOrTown = cityOrTown;
+        this.state = state;
+        this.pinCode = pinCode;
+        this.bills = bills;
+        this.toMobiles = toMobiles;
+    }
+
+    @OneToMany(mappedBy = "toCustomer")
+     @JsonIgnore
+      List<ToMobile>toMobiles;
 }
