@@ -48,7 +48,7 @@ public class BillService {
           bill.setFromCustomer(fromCustomer);
        }
 
-
+        System.out.println("hello");
         return billRepo.save(bill);
     }
 
