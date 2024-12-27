@@ -8,5 +8,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface AgentRepo extends JpaRepository<Agent,Long> {
    @Query(nativeQuery = true,value = "select * from agent where city_or_town=?1")
-    Agent findByCityOrTown(String cityOrTown);
+    Agent findByCityOrTown(String city_or_town);
 }

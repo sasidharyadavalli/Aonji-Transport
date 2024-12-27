@@ -31,7 +31,8 @@ public class BillService {
         }
 
         String name=bill.getToCustomer().getName();
-        ToCustomer toCustomer=toCustomerService.findByName(name);
+        Long mobile=bill.getToCustomer().getMobile();
+        ToCustomer toCustomer=toCustomerService.findByNameAndMobile(name,mobile);
          if(toCustomer==null){
              toCustomerService.saveToCustomer(bill.getToCustomer());
          }else {
