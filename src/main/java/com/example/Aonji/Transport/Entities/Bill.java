@@ -1,10 +1,12 @@
 package com.example.Aonji.Transport.Entities;
 
 import jakarta.persistence.*;
+import lombok.Data;
 
 import java.util.Date;
 
 @Entity
+@Data
 public class Bill {
    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
