@@ -46,7 +46,7 @@ public class BillService {
       ToCustomer toCustomer=toCustomerService.findByName(name);
         Long toMobile=bill.getToMobile().getMobile();
         List<ToMobile>toMobiles=toCustomer.getToMobiles();
-        ToMobile[]toMobiles1=(ToMobile[]) toMobiles.toArray();
+        ToMobile[]toMobiles1= toMobiles.toArray(new ToMobile[0]);
          String street=bill.getToCustomer().getStreet();
        boolean flag=false;
          for(int i=0;i<toMobiles1.length;i++){
@@ -57,7 +57,7 @@ public class BillService {
            }
        }
          if(!flag){
-          if(street!=toCustomer.getStreet()){
+          if(street.equalsIgnoreCase(toCustomer.getStreet())){
 
               toCustomerService.saveToCustomer(bill.getToCustomer());
           }else {
@@ -73,7 +73,7 @@ public class BillService {
         FromCustomer fromCustomer=fromCustomerService.findByName(name);
         Long froMobile=bill.getFromMobile().getMobile();
         List<FromMobile>fromMobiles=fromCustomer.getFromMobiles();
-        FromMobile[]fromMobiles1=(FromMobile[]) fromMobiles.toArray();
+        FromMobile[]fromMobiles1=fromMobiles.toArray(new FromMobile[0]);
         String street2=bill.getFromCustomer().getStreet();
         boolean flag2=false;
         for(int i=0;i<fromMobiles1.length;i++){
@@ -84,7 +84,7 @@ public class BillService {
             }
         }
         if(!flag2){
-            if(street2!=fromCustomer.getStreet()){
+            if(street2.equalsIgnoreCase(fromCustomer.getStreet())){
 
                 fromCustomerService.saveFromCustomer(bill.getFromCustomer());
             }else {

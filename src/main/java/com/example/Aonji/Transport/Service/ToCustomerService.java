@@ -15,9 +15,9 @@ private final ToCustomerRepo toCustomerRepo;
         return toCustomerRepo.save(toCustomer);
     }
 
-    public ToCustomer findByNameAndMobile(String name,Long mobile) {
-       return toCustomerRepo.findByNameAndMobile(name,mobile);
-    }
+//    public ToCustomer findByNameAndMobile(String name,Long mobile) {
+//       return toCustomerRepo.findByNameAndMobile(name,mobile);
+//    }
 
     public ToCustomer findByName(String name) {
        return     toCustomerRepo.findByName(name);

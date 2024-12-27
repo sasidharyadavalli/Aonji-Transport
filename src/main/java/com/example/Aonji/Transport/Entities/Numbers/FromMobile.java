@@ -71,7 +71,7 @@ List<Bill>bills;
     }
 
     @ManyToOne
-@JoinColumn(name = "fromMobiles")
+@JoinColumn(name = "from_customer_id")
 FromCustomer fromCustomer;
 
 }

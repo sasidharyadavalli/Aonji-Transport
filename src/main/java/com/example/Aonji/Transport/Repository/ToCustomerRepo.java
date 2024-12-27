@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ToCustomerRepo extends JpaRepository<ToCustomer,Long> {
-    ToCustomer findByNameAndMobile(String name,Long mobile);
+   // ToCustomer findByNameAndMobile(String name,Long mobile);
 
     ToCustomer findByName(String name);
 }

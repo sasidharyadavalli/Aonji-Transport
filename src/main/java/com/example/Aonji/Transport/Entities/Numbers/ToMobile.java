@@ -70,6 +70,6 @@ public class ToMobile {
    List<Bill>bills;
 
    @ManyToOne
-    @JoinColumn(name = "to_mobile_id")
+    @JoinColumn(name = "to_customer_id")
    ToCustomer toCustomer;
 }
