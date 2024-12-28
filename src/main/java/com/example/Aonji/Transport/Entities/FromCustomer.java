@@ -12,7 +12,7 @@ public class FromCustomer {
     public FromCustomer() {
     }
 
-    public FromCustomer(Long id, String name, Long mobile, String street, String landmark, String cityOrTown, String state, Long pinCode, List<Bill> bills) {
+    public FromCustomer(Long id, String name,Long mobile2 ,Long mobile, String street, String landmark, String cityOrTown, String state, Long pinCode, List<Bill> bills) {
         this.id = id;
         this.name = name;
         this.mobile = mobile;
@@ -22,6 +22,7 @@ public class FromCustomer {
         this.state = state;
         this.pinCode = pinCode;
         this.bills = bills;
+        this.mobile2=mobile2;
     }
 
     @Id
@@ -29,12 +30,14 @@ public class FromCustomer {
     Long id;
     String name;
 
+
     @Override
     public String toString() {
         return "FromCustomer{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", mobile=" + mobile +
+                ", mobile2=" + mobile2 +
                 ", street='" + street + '\'' +
                 ", landmark='" + landmark + '\'' +
                 ", cityOrTown='" + cityOrTown + '\'' +
@@ -45,6 +48,16 @@ public class FromCustomer {
     }
 
     Long mobile;
+
+    public Long getMobile2() {
+        return mobile2;
+    }
+
+    public void setMobile2(Long mobile2) {
+        this.mobile2 = mobile2;
+    }
+
+    Long mobile2;
 
     public Long getId() {
         return id;

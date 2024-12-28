@@ -10,9 +10,12 @@ public class Bill {
  public Bill() {
  }
 
- public Bill(Long id, Long lr_no, String to_townOrCity, int no_of_parcels, Date date, String parcel_description, ToCustomer toCustomer, Agent agent, FromCustomer fromCustomer, int cost) {
+
+ public Bill(Long id, Long lr_no, Long to_mobile, Long from_mobile, String to_townOrCity, int no_of_parcels, Date date, String parcel_description, ToCustomer toCustomer, Agent agent, FromCustomer fromCustomer, int cost) {
   this.id = id;
   this.lr_no = lr_no;
+  this.to_mobile = to_mobile;
+  this.from_mobile = from_mobile;
   To_townOrCity = to_townOrCity;
   this.no_of_parcels = no_of_parcels;
   this.date = date;
@@ -28,6 +31,25 @@ public class Bill {
     Long id;
    @Column(nullable = false)
     Long lr_no;
+   Long to_mobile;
+
+ public Long getTo_mobile() {
+  return to_mobile;
+ }
+
+ public void setTo_mobile(Long to_mobile) {
+  this.to_mobile = to_mobile;
+ }
+
+ public Long getFrom_mobile() {
+  return from_mobile;
+ }
+
+ public void setFrom_mobile(Long from_mobile) {
+  this.from_mobile = from_mobile;
+ }
+
+ Long from_mobile;
 
  public Long getId() {
   return id;
@@ -38,6 +60,8 @@ public class Bill {
   return "Bill{" +
           "id=" + id +
           ", lr_no=" + lr_no +
+          ", to_mobile=" + to_mobile +
+          ", from_mobile=" + from_mobile +
           ", To_townOrCity='" + To_townOrCity + '\'' +
           ", no_of_parcels=" + no_of_parcels +
           ", date=" + date +
@@ -131,13 +155,13 @@ public class Bill {
     @Column(nullable = false)
     Date date;
     String parcel_description;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
      @JoinColumn(name = "to_customer_id")
     ToCustomer toCustomer;
     @ManyToOne
     @JoinColumn(name = "agent_id")
     Agent agent;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "from_customer_id")
     FromCustomer fromCustomer;
     @Column(nullable = false)

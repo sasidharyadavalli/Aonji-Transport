@@ -18,7 +18,7 @@ public class ToCustomer {
     public ToCustomer() {
     }
 
-    public ToCustomer(Long id, String name, Long mobile, String street, String landMark, String cityOrTown, String state, Long pinCode, List<Bill> bills) {
+    public ToCustomer(Long id,Long mobile2,String name, Long mobile, String street, String landMark, String cityOrTown, String state, Long pinCode, List<Bill> bills) {
         this.id = id;
         this.name = name;
         this.mobile = mobile;
@@ -28,6 +28,7 @@ public class ToCustomer {
         this.state = state;
         this.pinCode = pinCode;
         this.bills = bills;
+        this.mobile2=mobile2;
     }
 
     @Override
@@ -37,12 +38,23 @@ public class ToCustomer {
                 ", name='" + name + '\'' +
                 ", mobile=" + mobile +
                 ", Street='" + Street + '\'' +
+                ", mobile2=" + mobile2 +
                 ", LandMark='" + LandMark + '\'' +
                 ", cityOrTown='" + cityOrTown + '\'' +
                 ", state='" + state + '\'' +
                 ", pinCode=" + pinCode +
                 ", bills=" + bills +
                 '}';
+    }
+
+    Long mobile2;
+
+    public Long getMobile2() {
+        return mobile2;
+    }
+
+    public void setMobile2(Long mobile2) {
+        this.mobile2 = mobile2;
     }
 
     public Long getId() {
