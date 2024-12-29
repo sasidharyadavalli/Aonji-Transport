@@ -5,8 +5,13 @@ import com.example.Aonji.Transport.Entities.Bill;
 import com.example.Aonji.Transport.Entities.FromCustomer;
 import com.example.Aonji.Transport.Entities.ToCustomer;
 import com.example.Aonji.Transport.Repository.BillRepo;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 
 @Service
@@ -24,30 +29,52 @@ public class BillService {
     }
 
 
-    public Bill saveBill(Bill bill){
+    public ResponseEntity<String> saveBill(Bill bill){
 
         String cityOrTown=bill.getTo_townOrCity();
         Agent agent=agentService.findByCityOrTown(cityOrTown);
         if(agent==null){
-            agentService.saveAgent(bill.getAgent());
+            if(bill.getAgent()!=null) {
+                if(bill.getAgent().getName()!=null&&bill.getAgent().getMobile()!=null){
+                    if(bill.getAgent().getCityOrTown()==null){
+                        bill.getAgent().setCityOrTown(bill.getTo_townOrCity());
+                    }
+                    agentService.saveAgent(bill.getAgent());
+                }else {
+                    return new ResponseEntity<>("required atleast name and number of agent", HttpStatus.BAD_REQUEST);
+                }
+            }else {
+                return new ResponseEntity<>("no agent found for entered city , please save agent details",HttpStatus.BAD_REQUEST);
+            }
         }else {
             bill.setAgent(agent);
         }
 
 
-        String name=bill.getToCustomer().getName();
+        String name=bill.getConsignee();
         ToCustomer toCustomer=toCustomerService.findByName(name);
         if(toCustomer==null){
+           if(bill.getToCustomer()!=null){
             if(bill.getTo_mobile()!=null) {
                 bill.getToCustomer().setMobile(bill.getTo_mobile());
             }
+            bill.getToCustomer().setCityOrTown(bill.getTo_townOrCity());
+            bill.getToCustomer().setName(name);
             toCustomerService.saveToCustomer(bill.getToCustomer());
+           }else {
+               ToCustomer toCustomer1=new ToCustomer();
+               toCustomer1.setName(name);
+               toCustomer1.setCityOrTown(bill.getTo_townOrCity());
+               if(bill.getTo_mobile()!=null){
+                   toCustomer1.setMobile(bill.getTo_mobile());
+               }
+               bill.setToCustomer(toCustomer1);
+               toCustomerService.saveToCustomer(toCustomer1);
+           }
          }else {
+            if(bill.getToCustomer()!=null){
             if(bill.getToCustomer().getStreet()!=null){
                 toCustomer.setStreet(bill.getToCustomer().getStreet());
-            }
-            if(bill.getToCustomer().getCityOrTown()!=null){
-                toCustomer.setCityOrTown(bill.getToCustomer().getCityOrTown());
             }
             if(bill.getToCustomer().getLandMark()!=null){
                 toCustomer.setLandMark(bill.getToCustomer().getLandMark());
@@ -57,6 +84,7 @@ public class BillService {
             }
             if(bill.getToCustomer().getPinCode()!=null){
                 toCustomer.setPinCode(bill.getToCustomer().getPinCode());
+            }
             }
            if(toCustomer.getMobile()!=null&&bill.getTo_mobile()!=null){
                if(Objects.equals(bill.getTo_mobile(), toCustomer.getMobile())){
@@ -75,28 +103,40 @@ public class BillService {
 
 
 
-        String name2=bill.getFromCustomer().getName();
+        String name2=bill.getConsignor();
         FromCustomer fromCustomer=fromCustomerService.findByName(name2);
         if(fromCustomer==null){
-            if(bill.getFrom_mobile()!=null) {
-                bill.getFromCustomer().setMobile(bill.getFrom_mobile());
+            if(bill.getFromCustomer()!=null) {
+                if (bill.getFrom_mobile() != null) {
+                    bill.getFromCustomer().setMobile(bill.getFrom_mobile());
+                }
+                bill.getFromCustomer().setCityOrTown(bill.getFrom_TownOrCity());
+                bill.getFromCustomer().setName(name2);
+                fromCustomerService.saveFromCustomer(bill.getFromCustomer());
+            }else {
+                FromCustomer fromCustomer1=new FromCustomer();
+                fromCustomer1.setName(name2);
+                fromCustomer1.setCityOrTown(bill.getFrom_TownOrCity());
+                if(bill.getFrom_mobile()!=null){
+                    fromCustomer1.setMobile(bill.getFrom_mobile());
+                }
+                bill.setFromCustomer(fromCustomer1);
+                fromCustomerService.saveFromCustomer(fromCustomer1);
             }
-            fromCustomerService.saveFromCustomer(bill.getFromCustomer());
-        }else {
-            if(bill.getFromCustomer().getStreet()!=null){
-                fromCustomer.setStreet(bill.getFromCustomer().getStreet());
-            }
-            if(bill.getFromCustomer().getCityOrTown()!=null){
-                fromCustomer.setCityOrTown(bill.getFromCustomer().getCityOrTown());
-            }
-            if(bill.getFromCustomer().getLandmark()!=null){
-                fromCustomer.setLandmark(bill.getFromCustomer().getLandmark());
-            }
-            if(bill.getFromCustomer().getState()!=null){
-                fromCustomer.setState(bill.getFromCustomer().getState());
-            }
-            if(bill.getFromCustomer().getPinCode()!=null){
-                fromCustomer.setPinCode(bill.getFromCustomer().getPinCode());
+            }else {
+            if(bill.getFromCustomer()!=null) {
+                if (bill.getFromCustomer().getStreet() != null) {
+                    fromCustomer.setStreet(bill.getFromCustomer().getStreet());
+                }
+                if (bill.getFromCustomer().getLandmark() != null) {
+                    fromCustomer.setLandmark(bill.getFromCustomer().getLandmark());
+                }
+                if (bill.getFromCustomer().getState() != null) {
+                    fromCustomer.setState(bill.getFromCustomer().getState());
+                }
+                if (bill.getFromCustomer().getPinCode() != null) {
+                    fromCustomer.setPinCode(bill.getFromCustomer().getPinCode());
+                }
             }
             if(fromCustomer.getMobile()!=null&&bill.getFrom_mobile()!=null){
                 if(Objects.equals(bill.getFrom_mobile(), fromCustomer.getMobile())){
@@ -112,8 +152,17 @@ public class BillService {
                 bill.setFromCustomer(fromCustomer);
             }
         }
-        return billRepo.save(bill);
+         try {
+             Bill bill2= billRepo.save(bill);
+             return new ResponseEntity<>("Bill saved successfully",HttpStatus.OK);
+         }catch (Exception e){
+             return new ResponseEntity<>("Error saving bill "+e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
+         }
     }
 
+
+    public List<Bill> findByDate(Date date){
+        return billRepo.findByDate(date);
+    }
 
 }

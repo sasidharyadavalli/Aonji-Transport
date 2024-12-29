@@ -1,8 +1,6 @@
 package com.example.Aonji.Transport.Entities;
 
 import jakarta.persistence.*;
-import lombok.Data;
-
 import java.util.Date;
 
 @Entity
@@ -10,8 +8,7 @@ public class Bill {
  public Bill() {
  }
 
-
- public Bill(Long id, Long lr_no, Long to_mobile, Long from_mobile, String to_townOrCity, int no_of_parcels, Date date, String parcel_description, ToCustomer toCustomer, Agent agent, FromCustomer fromCustomer, int cost) {
+ public Bill(Long id, Long lr_no, Long to_mobile, Long from_mobile, String to_townOrCity, int no_of_parcels, Date date, String parcel_description, ToCustomer toCustomer, Agent agent, FromCustomer fromCustomer, Double cost, Boolean paid, String consignor, String consignee, String from_TownOrCity) {
   this.id = id;
   this.lr_no = lr_no;
   this.to_mobile = to_mobile;
@@ -24,6 +21,10 @@ public class Bill {
   this.agent = agent;
   this.fromCustomer = fromCustomer;
   this.cost = cost;
+  this.paid = paid;
+  this.consignor = consignor;
+  this.consignee = consignee;
+  From_TownOrCity = from_TownOrCity;
  }
 
  @Id
@@ -70,6 +71,10 @@ public class Bill {
           ", agent=" + agent +
           ", fromCustomer=" + fromCustomer +
           ", cost=" + cost +
+          ", paid=" + paid +
+          ", consignor='" + consignor + '\'' +
+          ", consignee='" + consignee + '\'' +
+          ", From_TownOrCity='" + From_TownOrCity + '\'' +
           '}';
  }
 
@@ -133,6 +138,38 @@ public class Bill {
   this.agent = agent;
  }
 
+ public boolean isPaid() {
+  return paid;
+ }
+
+ public void setPaid(boolean paid) {
+  this.paid = paid;
+ }
+
+ public String getConsignor() {
+  return consignor;
+ }
+
+ public void setConsignor(String consignor) {
+  this.consignor = consignor;
+ }
+
+ public String getConsignee() {
+  return consignee;
+ }
+
+ public void setConsignee(String consignee) {
+  this.consignee = consignee;
+ }
+
+ public String getFrom_TownOrCity() {
+  return From_TownOrCity;
+ }
+
+ public void setFrom_TownOrCity(String from_TownOrCity) {
+  From_TownOrCity = from_TownOrCity;
+ }
+
  public FromCustomer getFromCustomer() {
   return fromCustomer;
  }
@@ -141,17 +178,17 @@ public class Bill {
   this.fromCustomer = fromCustomer;
  }
 
- public int getCost() {
+ public Double getCost() {
   return cost;
  }
 
- public void setCost(int cost) {
+ public void setCost(Double cost) {
   this.cost = cost;
  }
 
  @Column(nullable = false)
     String To_townOrCity;
-    int no_of_parcels;
+    Integer no_of_parcels;
     @Column(nullable = false)
     Date date;
     String parcel_description;
@@ -165,5 +202,10 @@ public class Bill {
     @JoinColumn(name = "from_customer_id")
     FromCustomer fromCustomer;
     @Column(nullable = false)
-    int cost;
+    Double cost;
+    Boolean paid;
+
+    String consignor;
+    String consignee;
+    String From_TownOrCity="proddatur";
 }
