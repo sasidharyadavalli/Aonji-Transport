@@ -1,15 +1,14 @@
 package com.example.Aonji.Transport.Service;
 
-import com.example.Aonji.Transport.Entities.Agent;
-import com.example.Aonji.Transport.Entities.Bill;
-import com.example.Aonji.Transport.Entities.FromCustomer;
-import com.example.Aonji.Transport.Entities.ToCustomer;
+import com.example.Aonji.Transport.Entities.*;
 import com.example.Aonji.Transport.Repository.BillRepo;
+import com.example.Aonji.Transport.Repository.DetailsRepo;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -18,18 +17,27 @@ import java.util.Objects;
 public class BillService {
     private final BillRepo billRepo;
     private final AgentService agentService;
+    private final DetailsRepo detailsRepo;
     private final ToCustomerService toCustomerService;
     private final FromCustomerService fromCustomerService;
 
-    public BillService(BillRepo billRepo, AgentService agentService, ToCustomerService toCustomerService, FromCustomerService fromCustomerService) {
+    public BillService(BillRepo billRepo, AgentService agentService, DetailsRepo detailsRepo, ToCustomerService toCustomerService, FromCustomerService fromCustomerService) {
         this.billRepo = billRepo;
         this.agentService = agentService;
+        this.detailsRepo = detailsRepo;
         this.toCustomerService = toCustomerService;
         this.fromCustomerService = fromCustomerService;
     }
 
 
     public ResponseEntity<String> saveBill(Bill bill){
+
+        if (bill.getDetails() != null) {
+            for (Details detail : bill.getDetails()) {
+                detail.setBill(bill);
+            }
+        }
+
 
         String cityOrTown=bill.getTo_townOrCity();
         Agent agent=agentService.findByCityOrTown(cityOrTown);
@@ -161,7 +169,7 @@ public class BillService {
     }
 
 
-    public List<Bill> findByDate(Date date){
+    public List<Bill> findByDate(LocalDate date){
         return billRepo.findByDate(date);
     }
 

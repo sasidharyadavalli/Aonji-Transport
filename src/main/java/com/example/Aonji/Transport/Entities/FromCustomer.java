@@ -27,8 +27,8 @@ public class FromCustomer {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
-    String name;
+  private   Long id;
+   private String name;
 
 
     @Override
@@ -47,7 +47,7 @@ public class FromCustomer {
                 '}';
     }
 
-    Long mobile;
+   private Long mobile;
 
     public Long getMobile2() {
         return mobile2;
@@ -57,7 +57,7 @@ public class FromCustomer {
         this.mobile2 = mobile2;
     }
 
-    Long mobile2;
+   private Long mobile2;
 
     public Long getId() {
         return id;
@@ -131,12 +131,12 @@ public class FromCustomer {
         this.bills = bills;
     }
 
-    String street;
-    String landmark;
-    String cityOrTown;
-    String state;
-    Long pinCode;
+   private String street;
+   private String landmark;
+   private String cityOrTown;
+   private String state;
+   private Long pinCode;
     @OneToMany(mappedBy = "fromCustomer")
     @JsonIgnore
-    List<Bill>bills;
+   private List<Bill>bills;
 }

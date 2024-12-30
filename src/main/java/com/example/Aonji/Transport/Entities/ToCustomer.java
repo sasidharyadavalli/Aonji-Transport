@@ -10,10 +10,10 @@ import java.util.List;
 public class ToCustomer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
-    String name;
-    Long mobile;
-    String Street;
+   private Long id;
+   private String name;
+   private Long mobile;
+   private String Street;
 
     public ToCustomer() {
     }
@@ -47,7 +47,7 @@ public class ToCustomer {
                 '}';
     }
 
-    Long mobile2;
+   private Long mobile2;
 
     public Long getMobile2() {
         return mobile2;
@@ -129,12 +129,12 @@ public class ToCustomer {
         this.bills = bills;
     }
 
-    String LandMark;
-    String cityOrTown;
-    String state;
-    Long pinCode;
+   private String LandMark;
+   private String cityOrTown;
+   private String state;
+   private Long pinCode;
     @OneToMany(mappedBy = "toCustomer")
     @JsonIgnore
-    List<Bill> bills;
+   private List<Bill> bills;
 
 }

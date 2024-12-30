@@ -1,12 +1,16 @@
 package com.example.Aonji.Transport.Entities.Dto;
 
+import com.example.Aonji.Transport.Entities.Details;
+
+import java.time.LocalDate;
 import java.util.Date;
+import java.util.List;
 
 public class BillResponseDto {
     private Long id;
     private Long lr_no;
     private Integer no_of_parcels;
-    private Date date;
+    private LocalDate date;
     private String parcel_description;
     private Double cost;
     private Boolean paid;
@@ -27,8 +31,7 @@ public class BillResponseDto {
     public BillResponseDto() {
     }
 
-    public BillResponseDto(Long AgentMobile,Long id, Long lr_no, Integer no_of_parcels, Date date, String parcel_description, Double cost, Boolean paid, String consignor, String consignee, String to_townOrCity, String from_TownOrCity, Long to_mobile, Long from_mobile) {
-       this.AgentMobile=AgentMobile;
+    public BillResponseDto(Long id, Long lr_no, Integer no_of_parcels, LocalDate date, String parcel_description, Double cost, Boolean paid, Long agentMobile, String consignor, String consignee, String to_townOrCity, String from_TownOrCity, Long to_mobile, Long from_mobile, List<Details> details) {
         this.id = id;
         this.lr_no = lr_no;
         this.no_of_parcels = no_of_parcels;
@@ -36,12 +39,14 @@ public class BillResponseDto {
         this.parcel_description = parcel_description;
         this.cost = cost;
         this.paid = paid;
+        AgentMobile = agentMobile;
         this.consignor = consignor;
         this.consignee = consignee;
         this.to_townOrCity = to_townOrCity;
         this.from_TownOrCity = from_TownOrCity;
         this.to_mobile = to_mobile;
         this.from_mobile = from_mobile;
+        this.details = details;
     }
 
     public void setId(Long id) {
@@ -64,11 +69,11 @@ public class BillResponseDto {
         this.no_of_parcels = no_of_parcels;
     }
 
-    public Date getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 
@@ -162,6 +167,7 @@ public class BillResponseDto {
                 ", from_TownOrCity='" + from_TownOrCity + '\'' +
                 ", to_mobile=" + to_mobile +
                 ", from_mobile=" + from_mobile +
+                ", details=" + details +
                 '}';
     }
 
@@ -171,5 +177,15 @@ public class BillResponseDto {
     private String from_TownOrCity;
     private Long to_mobile;
     private Long from_mobile;
+
+    public List<Details> getDetails() {
+        return details;
+    }
+
+    public void setDetails(List<Details> details) {
+        this.details = details;
+    }
+
+    private List<Details>details;
 
 }

@@ -7,6 +7,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -25,12 +26,7 @@ private final BillService billService;
     }
 
     @GetMapping("/findByDate/{date}")
-    public List<Bill>findByDate(@PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd") Date date){
-        return billService.findByDate(date);
-    }
-
-    @GetMapping("/findByDate2/{date}")
-    public List<BillResponseDto> findByDate2(@PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd") Date date) {
+    public List<BillResponseDto> findByDate2(@PathVariable  LocalDate date) {
         return billService.findByDate(date)
                 .stream()
                 .map(this::convertToDTO)
@@ -53,6 +49,9 @@ private final BillService billService;
         dto.setFrom_mobile(bill.getFrom_mobile());
         dto.setTo_mobile(bill.getTo_mobile());
         dto.setAgentMobile(bill.getAgent().getMobile());
+        if(bill.getDetails()!=null){
+            dto.setDetails(bill.getDetails());
+        }
         return dto;
     }
 

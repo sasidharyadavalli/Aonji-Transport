@@ -1,14 +1,25 @@
 package com.example.Aonji.Transport.Entities;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import java.util.Date;
+
+import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 public class Bill {
  public Bill() {
  }
 
- public Bill(Long id, Long lr_no, Long to_mobile, Long from_mobile, String to_townOrCity, int no_of_parcels, Date date, String parcel_description, ToCustomer toCustomer, Agent agent, FromCustomer fromCustomer, Double cost, Boolean paid, String consignor, String consignee, String from_TownOrCity) {
+ public List<Details> getDetails() {
+  return details;
+ }
+
+ public void setDetails(List<Details> details) {
+  this.details = details;
+ }
+
+ public Bill(Long id, Long lr_no, Long to_mobile, Long from_mobile, String to_townOrCity, Integer no_of_parcels, LocalDate date, String parcel_description, ToCustomer toCustomer, Agent agent, FromCustomer fromCustomer, Double cost, Boolean paid, String consignor, String consignee, String from_TownOrCity,List<Details> details) {
   this.id = id;
   this.lr_no = lr_no;
   this.to_mobile = to_mobile;
@@ -25,14 +36,15 @@ public class Bill {
   this.consignor = consignor;
   this.consignee = consignee;
   From_TownOrCity = from_TownOrCity;
+  this.details = details;
  }
 
  @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+   private Long id;
    @Column(nullable = false)
-    Long lr_no;
-   Long to_mobile;
+   private Long lr_no;
+  private Long to_mobile;
 
  public Long getTo_mobile() {
   return to_mobile;
@@ -50,7 +62,7 @@ public class Bill {
   this.from_mobile = from_mobile;
  }
 
- Long from_mobile;
+private Long from_mobile;
 
  public Long getId() {
   return id;
@@ -75,6 +87,7 @@ public class Bill {
           ", consignor='" + consignor + '\'' +
           ", consignee='" + consignee + '\'' +
           ", From_TownOrCity='" + From_TownOrCity + '\'' +
+          ", details=" + details +
           '}';
  }
 
@@ -106,11 +119,11 @@ public class Bill {
   this.no_of_parcels = no_of_parcels;
  }
 
- public Date getDate() {
+ public LocalDate getDate() {
   return date;
  }
 
- public void setDate(Date date) {
+ public void setDate(LocalDate date) {
   this.date = date;
  }
 
@@ -187,25 +200,29 @@ public class Bill {
  }
 
  @Column(nullable = false)
-    String To_townOrCity;
-    Integer no_of_parcels;
+   private String To_townOrCity;
+   private Integer no_of_parcels;
     @Column(nullable = false)
-    Date date;
-    String parcel_description;
+   private LocalDate date;
+   private String parcel_description;
     @ManyToOne(cascade = CascadeType.ALL)
      @JoinColumn(name = "to_customer_id")
-    ToCustomer toCustomer;
+   private ToCustomer toCustomer;
     @ManyToOne
     @JoinColumn(name = "agent_id")
-    Agent agent;
+   private Agent agent;
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "from_customer_id")
-    FromCustomer fromCustomer;
+   private FromCustomer fromCustomer;
     @Column(nullable = false)
-    Double cost;
-    Boolean paid;
+   private Double cost;
+   private Boolean paid;
 
-    String consignor;
-    String consignee;
-    String From_TownOrCity="proddatur";
+   private String consignor;
+   private String consignee;
+   private String From_TownOrCity="proddatur()";
+
+ @JsonManagedReference
+    @OneToMany(mappedBy = "bill",cascade = CascadeType.ALL,orphanRemoval = true)
+  private List<Details> details;
 }

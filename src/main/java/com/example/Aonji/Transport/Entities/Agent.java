@@ -26,7 +26,7 @@ public class Agent {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+   private Long id;
 
     @Override
     public String toString() {
@@ -43,8 +43,8 @@ public class Agent {
                 '}';
     }
 
-    String name;
-    Long mobile;
+   private String name;
+   private Long mobile;
 
     public Long getId() {
         return id;
@@ -118,12 +118,12 @@ public class Agent {
         this.bills = bills;
     }
 
-    String street;
-    String landmark;
-    String cityOrTown;
-    String state;
-    Long pinCode;
+   private String street;
+   private String landmark;
+   private String cityOrTown;
+   private String state;
+   private Long pinCode;
     @OneToMany(mappedBy = "agent")
      @JsonIgnore
-    List<Bill>bills;
+   private List<Bill>bills;
 }
