@@ -15,4 +15,6 @@ public interface BillRepo extends JpaRepository<Bill,Long> {
 
 
     List<Bill> findByDate(LocalDate date);
+
+    List<Bill> findByTo_townOrCityAndReachedFalse(String town);
 }

@@ -199,7 +199,7 @@ private Long from_mobile;
   this.cost = cost;
  }
 
- @Column(nullable = false)
+ @Column(nullable = false,name = "to_town_or_city")
    private String To_townOrCity;
    private Integer no_of_parcels;
     @Column(nullable = false)
@@ -225,4 +225,6 @@ private Long from_mobile;
  @JsonManagedReference
     @OneToMany(mappedBy = "bill",cascade = CascadeType.ALL,orphanRemoval = true)
   private List<Details> details;
+
+ private Boolean reached;
 }

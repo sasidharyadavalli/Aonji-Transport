@@ -173,4 +173,7 @@ public class BillService {
         return billRepo.findByDate(date);
     }
 
+    public List<Bill> getUnreachedBillsByTown(String town){
+        return billRepo.findByTo_townOrCityAndReachedFalse(town);
+    }
 }

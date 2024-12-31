@@ -31,7 +31,16 @@ private final BillService billService;
                 .stream()
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
+    }  @GetMapping("/findNotReachedByTown/{town}")
+    public List<BillResponseDto> getUnreachedBillsByTown(@PathVariable String town) {
+        return billService.getUnreachedBillsByTown(town)
+                .stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
     }
+
+
+
 
     private BillResponseDto convertToDTO(Bill bill) {
         BillResponseDto dto = new BillResponseDto();
