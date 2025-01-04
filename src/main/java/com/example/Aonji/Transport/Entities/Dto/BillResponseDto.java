@@ -3,12 +3,11 @@ package com.example.Aonji.Transport.Entities.Dto;
 import com.example.Aonji.Transport.Entities.Details;
 
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 
 public class BillResponseDto {
     private Long id;
-    private Long lr_no;
+    private Long lrNo;
     private Integer no_of_parcels;
     private LocalDate date;
     private String parcel_description;
@@ -31,9 +30,9 @@ public class BillResponseDto {
     public BillResponseDto() {
     }
 
-    public BillResponseDto(Long id, Long lr_no, Integer no_of_parcels, LocalDate date, String parcel_description, Double cost, Boolean paid, Long agentMobile, String consignor, String consignee, String to_townOrCity, String from_TownOrCity, Long to_mobile, Long from_mobile, List<Details> details) {
+    public BillResponseDto(Boolean reached,Long id, Long lrNo, Integer no_of_parcels, LocalDate date, String parcel_description, Double cost, Boolean paid, Long agentMobile, String consignor, String consignee, String to, String from, Long to_mobile, Long from_mobile, List<Details> details) {
         this.id = id;
-        this.lr_no = lr_no;
+        this.lrNo = lrNo;
         this.no_of_parcels = no_of_parcels;
         this.date = date;
         this.parcel_description = parcel_description;
@@ -42,23 +41,24 @@ public class BillResponseDto {
         AgentMobile = agentMobile;
         this.consignor = consignor;
         this.consignee = consignee;
-        this.to_townOrCity = to_townOrCity;
-        this.from_TownOrCity = from_TownOrCity;
+        this.to = to;
+        this.from = from;
         this.to_mobile = to_mobile;
         this.from_mobile = from_mobile;
         this.details = details;
+        this.reached=reached;
     }
 
     public void setId(Long id) {
         this.id = id;
     }
 
-    public Long getLr_no() {
-        return lr_no;
+    public Long getLrNo() {
+        return lrNo;
     }
 
-    public void setLr_no(Long lr_no) {
-        this.lr_no = lr_no;
+    public void setLrNo(Long lrNo) {
+        this.lrNo = lrNo;
     }
 
     public Integer getNo_of_parcels() {
@@ -117,20 +117,20 @@ public class BillResponseDto {
         this.consignee = consignee;
     }
 
-    public String getTo_townOrCity() {
-        return to_townOrCity;
+    public String getTo() {
+        return to;
     }
 
-    public void setTo_townOrCity(String to_townOrCity) {
-        this.to_townOrCity = to_townOrCity;
+    public void setTo(String to) {
+        this.to = to;
     }
 
-    public String getFrom_TownOrCity() {
-        return from_TownOrCity;
+    public String getFrom() {
+        return from;
     }
 
-    public void setFrom_TownOrCity(String from_TownOrCity) {
-        this.from_TownOrCity = from_TownOrCity;
+    public void setFrom(String from) {
+        this.from = from;
     }
 
     public Long getTo_mobile() {
@@ -149,32 +149,41 @@ public class BillResponseDto {
         this.from_mobile = from_mobile;
     }
 
+    public Boolean getReached() {
+        return reached;
+    }
+
+    public void setReached(Boolean reached) {
+        this.reached = reached;
+    }
 
     @Override
     public String toString() {
         return "BillResponseDto{" +
                 "id=" + id +
-                ", lr_no=" + lr_no +
+                ", lrNo=" + lrNo +
                 ", no_of_parcels=" + no_of_parcels +
                 ", date=" + date +
                 ", parcel_description='" + parcel_description + '\'' +
                 ", cost=" + cost +
                 ", paid=" + paid +
                 ", AgentMobile=" + AgentMobile +
+                ", reached=" + reached +
                 ", consignor='" + consignor + '\'' +
                 ", consignee='" + consignee + '\'' +
-                ", to_townOrCity='" + to_townOrCity + '\'' +
-                ", from_TownOrCity='" + from_TownOrCity + '\'' +
+                ", to='" + to + '\'' +
+                ", from='" + from + '\'' +
                 ", to_mobile=" + to_mobile +
                 ", from_mobile=" + from_mobile +
                 ", details=" + details +
                 '}';
     }
 
+    private Boolean reached;
     private String consignor;
     private String consignee;
-    private String to_townOrCity;
-    private String from_TownOrCity;
+    private String to;
+    private String from;
     private Long to_mobile;
     private Long from_mobile;
 

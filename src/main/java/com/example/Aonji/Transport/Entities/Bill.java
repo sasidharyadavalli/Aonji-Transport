@@ -19,12 +19,12 @@ public class Bill {
   this.details = details;
  }
 
- public Bill(Long id, Long lr_no, Long to_mobile, Long from_mobile, String to_townOrCity, Integer no_of_parcels, LocalDate date, String parcel_description, ToCustomer toCustomer, Agent agent, FromCustomer fromCustomer, Double cost, Boolean paid, String consignor, String consignee, String from_TownOrCity,List<Details> details) {
+ public Bill(Long id, Long lrNo, Long to_mobile, Long from_mobile, String toTown, Integer no_of_parcels, LocalDate date, String parcel_description, ToCustomer toCustomer, Agent agent, FromCustomer fromCustomer, Double cost, Boolean paid, String consignor, String consignee, String from_TownOrCity, List<Details> details) {
   this.id = id;
-  this.lr_no = lr_no;
+  this.lrNo = lrNo;
   this.to_mobile = to_mobile;
   this.from_mobile = from_mobile;
-  To_townOrCity = to_townOrCity;
+  this.toTown = toTown;
   this.no_of_parcels = no_of_parcels;
   this.date = date;
   this.parcel_description = parcel_description;
@@ -43,7 +43,7 @@ public class Bill {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
    private Long id;
    @Column(nullable = false)
-   private Long lr_no;
+   private Long lrNo;
   private Long to_mobile;
 
  public Long getTo_mobile() {
@@ -72,10 +72,10 @@ private Long from_mobile;
  public String toString() {
   return "Bill{" +
           "id=" + id +
-          ", lr_no=" + lr_no +
+          ", lrNo=" + lrNo +
           ", to_mobile=" + to_mobile +
           ", from_mobile=" + from_mobile +
-          ", To_townOrCity='" + To_townOrCity + '\'' +
+          ", toTownOrCity='" + toTown + '\'' +
           ", no_of_parcels=" + no_of_parcels +
           ", date=" + date +
           ", parcel_description='" + parcel_description + '\'' +
@@ -95,21 +95,14 @@ private Long from_mobile;
   this.id = id;
  }
 
- public Long getLr_no() {
-  return lr_no;
+ public Long getLrNo() {
+  return lrNo;
  }
 
- public void setLr_no(Long lr_no) {
-  this.lr_no = lr_no;
+ public void setLrNo(Long lrNo) {
+  this.lrNo = lrNo;
  }
 
- public String getTo_townOrCity() {
-  return To_townOrCity;
- }
-
- public void setTo_townOrCity(String to_townOrCity) {
-  To_townOrCity = to_townOrCity;
- }
 
  public int getNo_of_parcels() {
   return no_of_parcels;
@@ -153,6 +146,14 @@ private Long from_mobile;
 
  public boolean isPaid() {
   return paid;
+ }
+
+ public Boolean getReached() {
+  return reached;
+ }
+
+ public void setReached(Boolean reached) {
+  this.reached = reached;
  }
 
  public void setPaid(boolean paid) {
@@ -200,11 +201,20 @@ private Long from_mobile;
  }
 
  @Column(nullable = false,name = "to_town_or_city")
-   private String To_townOrCity;
+   private String toTown;
    private Integer no_of_parcels;
     @Column(nullable = false)
    private LocalDate date;
-   private String parcel_description;
+
+ public String getToTown() {
+  return toTown;
+ }
+
+ public void setToTown(String toTown) {
+  this.toTown = toTown;
+ }
+
+ private String parcel_description;
     @ManyToOne(cascade = CascadeType.ALL)
      @JoinColumn(name = "to_customer_id")
    private ToCustomer toCustomer;
@@ -220,7 +230,7 @@ private Long from_mobile;
 
    private String consignor;
    private String consignee;
-   private String From_TownOrCity="proddatur()";
+   private String From_TownOrCity="proddatur";
 
  @JsonManagedReference
     @OneToMany(mappedBy = "bill",cascade = CascadeType.ALL,orphanRemoval = true)

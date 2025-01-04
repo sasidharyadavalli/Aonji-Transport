@@ -1,17 +1,18 @@
 package com.example.Aonji.Transport.Service;
 
 import com.example.Aonji.Transport.Entities.*;
+import com.example.Aonji.Transport.Entities.Dto.BillResponseDto;
 import com.example.Aonji.Transport.Repository.BillRepo;
 import com.example.Aonji.Transport.Repository.DetailsRepo;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @Service
 public class BillService {
@@ -30,7 +31,7 @@ public class BillService {
     }
 
 
-    public ResponseEntity<String> saveBill(Bill bill){
+    public ResponseEntity<String>saveBill(Bill bill){
 
         if (bill.getDetails() != null) {
             for (Details detail : bill.getDetails()) {
@@ -39,13 +40,13 @@ public class BillService {
         }
 
 
-        String cityOrTown=bill.getTo_townOrCity();
+        String cityOrTown=bill.getToTown();
         Agent agent=agentService.findByCityOrTown(cityOrTown);
         if(agent==null){
             if(bill.getAgent()!=null) {
                 if(bill.getAgent().getName()!=null&&bill.getAgent().getMobile()!=null){
                     if(bill.getAgent().getCityOrTown()==null){
-                        bill.getAgent().setCityOrTown(bill.getTo_townOrCity());
+                        bill.getAgent().setCityOrTown(bill.getToTown());
                     }
                     agentService.saveAgent(bill.getAgent());
                 }else {
@@ -66,13 +67,13 @@ public class BillService {
             if(bill.getTo_mobile()!=null) {
                 bill.getToCustomer().setMobile(bill.getTo_mobile());
             }
-            bill.getToCustomer().setCityOrTown(bill.getTo_townOrCity());
+            bill.getToCustomer().setCityOrTown(bill.getToTown());
             bill.getToCustomer().setName(name);
             toCustomerService.saveToCustomer(bill.getToCustomer());
            }else {
                ToCustomer toCustomer1=new ToCustomer();
                toCustomer1.setName(name);
-               toCustomer1.setCityOrTown(bill.getTo_townOrCity());
+               toCustomer1.setCityOrTown(bill.getToTown());
                if(bill.getTo_mobile()!=null){
                    toCustomer1.setMobile(bill.getTo_mobile());
                }
@@ -174,6 +175,56 @@ public class BillService {
     }
 
     public List<Bill> getUnreachedBillsByTown(String town){
-        return billRepo.findByTo_townOrCityAndReachedFalse(town);
+        return billRepo.findByToTownAndReachedFalse(town);
     }
+
+
+    public ResponseEntity<String> toggleReachedById(List<Long>ids){
+         StringBuilder responseMessage=new StringBuilder();
+         boolean hasErrors=false;
+          try {
+              for (Long id :ids) {
+                  int result= billRepo.toggleReachedById(id);
+                  if(result==0) {
+                      hasErrors=true;
+                     responseMessage.append("parcel with Id :").append(id).append(" not toggled successfully. ");
+                  }
+               }
+          }catch (Exception e){
+
+         return  ResponseEntity.internalServerError().body(" error occurred :not toggled successfully ,"+e.getMessage());
+          }
+          if (hasErrors){
+              responseMessage.append(" Remaining parcels toggled successfully.");
+              return ResponseEntity.status(207).body(responseMessage.toString());
+          }else {
+              responseMessage.append("parcels toggled successfully");
+          }
+      return ResponseEntity.ok(responseMessage.toString());
+    }
+
+    public Optional<Bill> findByLrNo(@PathVariable Long LrNo){
+        return billRepo.findByLrNo(LrNo);
+    }
+
+    public List<Bill>findByDateAndToTown(LocalDate date,String toTownOrCity){
+        return billRepo.findByDateAndToTown(date,toTownOrCity);
+    }
+
+    public List<Bill> findByConsignorAndDate(String consignor, LocalDate date) {
+         return billRepo.findByConsignorAndDate(consignor,date);
+    }
+
+    public List<Bill> findByConsignor(String consignor) {
+        return billRepo.findByConsignor(consignor);
+    }
+
+    public List<Bill> findByConsigneeAndDate(String consignee, LocalDate date) {
+       return billRepo.findByConsigneeAndDate(consignee,date);
+    }
+
+    public List<Bill> findByConsignee(String consignee) {
+          return billRepo.findByConsignee(consignee);
+    }
+
 }
