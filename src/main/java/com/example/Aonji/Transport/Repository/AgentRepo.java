@@ -5,8 +5,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface AgentRepo extends JpaRepository<Agent,Long> {
-   @Query(nativeQuery = true,value = "select * from agent where city_or_town=?1")
-    Agent findByCityOrTown(String cityOrTown);
+    Optional<Agent> findByTown(String town);
+
+    boolean existsByTown(String town);
 }

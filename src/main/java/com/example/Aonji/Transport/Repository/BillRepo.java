@@ -39,4 +39,15 @@ public interface BillRepo extends JpaRepository<Bill,Long> {
     List<Bill> findByConsigneeAndDate(String consignee, LocalDate date);
 
     List<Bill> findByConsignee(String consignee);
+
+    List<Bill> findByToTown(String toTown);
+
+    @Query(nativeQuery = true,value = "select b.cost from bill b where b.id=?1")
+    Double findBillCostById(Long id);
+
+    @Query(nativeQuery = true,value = "select b.cost from bill b where b.id=?1 and paid=true")
+    Double findBillCostByIdAndPaid(Long id);
+
+    @Query(nativeQuery = true,value = "select to_town_or_city from bill where id=?1")
+    String findToTownById(Long id);
 }

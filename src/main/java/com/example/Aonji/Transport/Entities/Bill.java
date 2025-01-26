@@ -230,7 +230,7 @@ private Long from_mobile;
 
    private String consignor;
    private String consignee;
-   private String From_TownOrCity="proddatur";
+   private String From_TownOrCity="proddatur-Aonji_Transport-8106226616";
 
  @JsonManagedReference
     @OneToMany(mappedBy = "bill",cascade = CascadeType.ALL,orphanRemoval = true)

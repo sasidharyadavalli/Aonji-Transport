@@ -2,7 +2,6 @@ package com.example.Aonji.Transport.Entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.Data;
 
 import java.util.List;
 
@@ -18,12 +17,12 @@ public class ToCustomer {
     public ToCustomer() {
     }
 
-    public ToCustomer(Long id,Long mobile2,String name, Long mobile, String street, String landMark, String cityOrTown, String state, Long pinCode, List<Bill> bills) {
+    public ToCustomer(Long id, Long mobile2, String name, Long mobile, String street, String landmark, String cityOrTown, String state, Long pinCode, List<Bill> bills) {
         this.id = id;
         this.name = name;
         this.mobile = mobile;
         Street = street;
-        LandMark = landMark;
+        this.landmark = landmark;
         this.cityOrTown = cityOrTown;
         this.state = state;
         this.pinCode = pinCode;
@@ -39,7 +38,7 @@ public class ToCustomer {
                 ", mobile=" + mobile +
                 ", Street='" + Street + '\'' +
                 ", mobile2=" + mobile2 +
-                ", LandMark='" + LandMark + '\'' +
+                ", landmark='" + landmark + '\'' +
                 ", cityOrTown='" + cityOrTown + '\'' +
                 ", state='" + state + '\'' +
                 ", pinCode=" + pinCode +
@@ -89,12 +88,12 @@ public class ToCustomer {
         Street = street;
     }
 
-    public String getLandMark() {
-        return LandMark;
+    public String getLandmark() {
+        return landmark;
     }
 
-    public void setLandMark(String landMark) {
-        LandMark = landMark;
+    public void setLandmark(String landmark) {
+        this.landmark = landmark;
     }
 
     public String getCityOrTown() {
@@ -129,7 +128,8 @@ public class ToCustomer {
         this.bills = bills;
     }
 
-   private String LandMark;
+    @Column(name = "land_mark")
+   private String landmark;
    private String cityOrTown;
    private String state;
    private Long pinCode;

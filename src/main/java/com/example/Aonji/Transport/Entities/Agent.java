@@ -2,7 +2,6 @@ package com.example.Aonji.Transport.Entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.Data;
 
 import java.util.List;
 
@@ -12,13 +11,13 @@ public class Agent {
     public Agent() {
     }
 
-    public Agent(Long id, String name, Long mobile, String street, String landmark, String cityOrTown, String state, Long pinCode, List<Bill> bills) {
+    public Agent(Long id, String name, Long mobile, String street, String landmark, String town, String state, Long pinCode, List<Bill> bills) {
         this.id = id;
         this.name = name;
         this.mobile = mobile;
         this.street = street;
         this.landmark = landmark;
-        this.cityOrTown = cityOrTown;
+        this.town = town;
         this.state = state;
         this.pinCode = pinCode;
         this.bills = bills;
@@ -36,7 +35,7 @@ public class Agent {
                 ", mobile=" + mobile +
                 ", street='" + street + '\'' +
                 ", landmark='" + landmark + '\'' +
-                ", cityOrTown='" + cityOrTown + '\'' +
+                ", town='" + town + '\'' +
                 ", state='" + state + '\'' +
                 ", pinCode=" + pinCode +
                 ", bills=" + bills +
@@ -86,12 +85,12 @@ public class Agent {
         this.landmark = landmark;
     }
 
-    public String getCityOrTown() {
-        return cityOrTown;
+    public String getTown() {
+        return town;
     }
 
-    public void setCityOrTown(String cityOrTown) {
-        this.cityOrTown = cityOrTown;
+    public void setTown(String town) {
+        this.town = town;
     }
 
     public String getState() {
@@ -120,10 +119,14 @@ public class Agent {
 
    private String street;
    private String landmark;
-   private String cityOrTown;
+   @Column(unique = true,nullable = false,name = "city_or_town")
+   private String town;
    private String state;
    private Long pinCode;
     @OneToMany(mappedBy = "agent")
      @JsonIgnore
    private List<Bill>bills;
+    @OneToMany(mappedBy = "agent")
+    @JsonIgnore
+    private List<Accounts>accounts;
 }

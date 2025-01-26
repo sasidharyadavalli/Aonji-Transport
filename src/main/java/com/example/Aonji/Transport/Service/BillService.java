@@ -1,7 +1,6 @@
 package com.example.Aonji.Transport.Service;
 
 import com.example.Aonji.Transport.Entities.*;
-import com.example.Aonji.Transport.Entities.Dto.BillResponseDto;
 import com.example.Aonji.Transport.Repository.BillRepo;
 import com.example.Aonji.Transport.Repository.DetailsRepo;
 import org.springframework.http.HttpStatus;
@@ -10,22 +9,22 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class BillService {
     private final BillRepo billRepo;
     private final AgentService agentService;
     private final DetailsRepo detailsRepo;
+    private final AccountService accountService;
     private final ToCustomerService toCustomerService;
     private final FromCustomerService fromCustomerService;
 
-    public BillService(BillRepo billRepo, AgentService agentService, DetailsRepo detailsRepo, ToCustomerService toCustomerService, FromCustomerService fromCustomerService) {
+    public BillService(BillRepo billRepo, AgentService agentService, DetailsRepo detailsRepo, AccountService accountService, ToCustomerService toCustomerService, FromCustomerService fromCustomerService) {
         this.billRepo = billRepo;
         this.agentService = agentService;
         this.detailsRepo = detailsRepo;
+        this.accountService = accountService;
         this.toCustomerService = toCustomerService;
         this.fromCustomerService = fromCustomerService;
     }
@@ -38,25 +37,15 @@ public class BillService {
                 detail.setBill(bill);
             }
         }
+        bill.setReached(false);
 
 
-        String cityOrTown=bill.getToTown();
-        Agent agent=agentService.findByCityOrTown(cityOrTown);
-        if(agent==null){
-            if(bill.getAgent()!=null) {
-                if(bill.getAgent().getName()!=null&&bill.getAgent().getMobile()!=null){
-                    if(bill.getAgent().getCityOrTown()==null){
-                        bill.getAgent().setCityOrTown(bill.getToTown());
-                    }
-                    agentService.saveAgent(bill.getAgent());
-                }else {
-                    return new ResponseEntity<>("required atleast name and number of agent", HttpStatus.BAD_REQUEST);
-                }
-            }else {
-                return new ResponseEntity<>("no agent found for entered city , please save agent details",HttpStatus.BAD_REQUEST);
-            }
+        String town=bill.getToTown();
+        Optional<Agent> agent=agentService.findByTown(town);
+        if(agent.isPresent()){
+            bill.setAgent(agent.get());
         }else {
-            bill.setAgent(agent);
+            return ResponseEntity.badRequest().body("no agent found");
         }
 
 
@@ -85,8 +74,8 @@ public class BillService {
             if(bill.getToCustomer().getStreet()!=null){
                 toCustomer.setStreet(bill.getToCustomer().getStreet());
             }
-            if(bill.getToCustomer().getLandMark()!=null){
-                toCustomer.setLandMark(bill.getToCustomer().getLandMark());
+            if(bill.getToCustomer().getLandmark()!=null){
+                toCustomer.setLandmark(bill.getToCustomer().getLandmark());
             }
             if(bill.getToCustomer().getState()!=null){
                 toCustomer.setState(bill.getToCustomer().getState());
@@ -179,29 +168,55 @@ public class BillService {
     }
 
 
-    public ResponseEntity<String> toggleReachedById(List<Long>ids){
-         StringBuilder responseMessage=new StringBuilder();
-         boolean hasErrors=false;
-          try {
-              for (Long id :ids) {
-                  int result= billRepo.toggleReachedById(id);
-                  if(result==0) {
-                      hasErrors=true;
-                     responseMessage.append("parcel with Id :").append(id).append(" not toggled successfully. ");
-                  }
+    public ResponseEntity<Map<String,Object>> toggleReachedById(List<Long>ids) {
+        StringBuilder responseMessage = new StringBuilder();
+        double totalSum= 0d;
+        double paidAmount=0d;
+        double unPaidAmount=0d;
+        for (Long id : ids) {
+            int result = billRepo.toggleReachedById(id);
+          if (result>0) {
+              Double billCost = billRepo.findBillCostById(id);
+              Double billCostPaid=billRepo.findBillCostByIdAndPaid(id);
+               if (billCost!=null){
+                   totalSum+=billCost;
+               }else {
+                   responseMessage.append("Bill with id ").append(id).append(" has no cost. ");
                }
-          }catch (Exception e){
-
-         return  ResponseEntity.internalServerError().body(" error occurred :not toggled successfully ,"+e.getMessage());
-          }
-          if (hasErrors){
-              responseMessage.append(" Remaining parcels toggled successfully.");
-              return ResponseEntity.status(207).body(responseMessage.toString());
+              if (billCostPaid!=null) {
+                  paidAmount += billCostPaid;
+              }
           }else {
-              responseMessage.append("parcels toggled successfully");
+              responseMessage.append("failed to toggle bill id ").append(id).append(". ");
           }
-      return ResponseEntity.ok(responseMessage.toString());
+        }
+        unPaidAmount=totalSum-paidAmount;
+        Long id1=ids.getFirst();
+        String to=billRepo.findToTownById(id1);
+        Optional<Agent> agent=agentService.findByTown(to);
+        double agentShare = paidAmount * 0.10d;
+        double agentShareUnpaidBills = unPaidAmount * 0.10d;
+        double ourShare = unPaidAmount - agentShareUnpaidBills;
+        Accounts account=new Accounts();
+        account.setDate(LocalDate.now());
+        account.setAgentShare(agentShare);
+        account.setOurShare(ourShare);
+        account.setPaidAmount(paidAmount);
+        account.setUnPaidAmount(unPaidAmount);
+        account.setTotalAmount(totalSum);
+        account.setTo(to);
+        account.setAgent(agent.get());
+        account.setBillIds(ids);
+       accountService.saveAccount(account);
+        Map<String,Object>response=new HashMap<>();
+        response.put("totalAmount",totalSum);
+        response.put("paidAmount",paidAmount);
+        response.put("unPaidAmount",unPaidAmount);
+        response.put("message", !responseMessage.isEmpty() ?responseMessage.toString():"Toggled Successfully");
+        return ResponseEntity.ok().body(response);
     }
+
+
 
     public Optional<Bill> findByLrNo(@PathVariable Long LrNo){
         return billRepo.findByLrNo(LrNo);
@@ -227,4 +242,7 @@ public class BillService {
           return billRepo.findByConsignee(consignee);
     }
 
+    public List<Bill> findByToTown(String toTown) {
+        return billRepo.findByToTown(toTown);
+    }
 }

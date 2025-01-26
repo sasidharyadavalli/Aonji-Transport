@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -40,7 +41,7 @@ private final BillService billService;
                 .collect(Collectors.toList());
     }
      @PutMapping("toggleReachedById")
-     public ResponseEntity<String>toggleReachedById(@RequestBody List<Long>ids){
+     public ResponseEntity<Map<String,Object>>toggleReachedById(@RequestBody List<Long>ids){
         return billService.toggleReachedById(ids);
      }
 
@@ -58,10 +59,10 @@ private final BillService billService;
         }
      }
 
-      @GetMapping("getByDateAndTown/{date}/{toTownOrCity}")
-      public List<BillResponseDto> getByDateAndTown(@PathVariable LocalDate date,@PathVariable String toTownOrCity){
+      @GetMapping("getByDateAndTown/{date}/{to}")
+      public List<BillResponseDto> getByDateAndTown(@PathVariable LocalDate date,@PathVariable String to){
 
-           return billService.findByDateAndToTown(date,toTownOrCity)
+           return billService.findByDateAndToTown(date,to)
                    .stream()
                    .map(this::convertToDTO)
                    .collect(Collectors.toList());
@@ -99,10 +100,13 @@ private final BillService billService;
                 .collect(Collectors.toList());
       }
 
-      public List<Bill>findByAgentAndDate(@PathVariable String agent,@PathVariable LocalDate date){
-        return billService.findByAgentAndDate(agent,date);
+      @GetMapping("/getByTown/{toTown}")
+      public List<BillResponseDto>findByTown(@PathVariable String toTown){
+        return billService.findByToTown(toTown)
+                .stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
       }
-
 
 
     private BillResponseDto convertToDTO(Bill bill) {
